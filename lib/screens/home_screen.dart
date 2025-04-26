@@ -12,36 +12,19 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
-  int _homePageIndex = 0; // Track the current page within the "Home" tab
 
   // Define pages for the BottomNavigationBar
   static const List<Widget> _tabPages = <Widget>[
-    HomeTab(), // Custom widget for the slider within "Home"
+    HomeTab(),
     VehiclesPage(),
     DriversPage(),
     AccountPage(),
   ];
 
-  // Pages for the Home tab slider
-  static final List<Widget> _homePages = <Widget>[
-    HomePage(),
-    LossProfitDetails(),
-  ];
-
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
-      // Reset _homePageIndex when switching away from Home tab
-      if (index != 0) _homePageIndex = 0;
     });
-  }
-
-  void _onPageChanged(int index) {
-    if (_selectedIndex == 0) {
-      setState(() {
-        _homePageIndex = index;
-      });
-    }
   }
 
   @override
@@ -88,19 +71,11 @@ class HomeTab extends StatefulWidget {
 
 class _HomeTabState extends State<HomeTab> {
   late PageController _pageController;
-  int _currentPage = 0;
 
   @override
   void initState() {
     super.initState();
-    _pageController = PageController();
-    _pageController.addListener(() {
-      if (_pageController.page?.round() != _currentPage) {
-        setState(() {
-          _currentPage = _pageController.page!.round();
-        });
-      }
-    });
+    _pageController = PageController(initialPage: 0);
   }
 
   @override
@@ -114,27 +89,11 @@ class _HomeTabState extends State<HomeTab> {
     return Scaffold(
       body: PageView(
         controller: _pageController,
-        onPageChanged: (index) {
-          setState(() {
-            _currentPage = index;
-          });
-        },
-        children: [
+        physics: const AlwaysScrollableScrollPhysics(), // Ensure two-way scrolling
+        children: const [
           HomePage(),
           LossProfitDetails(),
         ],
-      ),
-      bottomNavigationBar: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: List.generate(2, (index) {
-          return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 4.0),
-            child: CircleAvatar(
-              radius: 4,
-              backgroundColor: _currentPage == index ? AppColors.primary : AppColors.greyText,
-            ),
-          );
-        }),
       ),
     );
   }

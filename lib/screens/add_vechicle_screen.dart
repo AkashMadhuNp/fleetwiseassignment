@@ -80,7 +80,7 @@ class _AddVehicleScreenState extends State<AddVehicleScreen> {
                   child: ElevatedButton(
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
-                        context.read<AuthBloc>().add(AddVehicleEvent(_vehicleNumberController.text));
+                        Navigator.of(context).pop();
                       }
                     },
                     style: ElevatedButton.styleFrom(

@@ -46,6 +46,7 @@ class DocumentForm extends StatelessWidget {
     required bool isRequired,
     String? filePath,
     required VoidCallback onUpload,
+    required double screenWidth,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -71,56 +72,67 @@ class DocumentForm extends StatelessWidget {
             ],
           ),
         ),
-        const SizedBox(height: 8),
-        Container(
-          width: 398,
-          height: 56,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(16),
-          ),
-          child: Row(
-            children: [
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Text(
-                    filePath != null ? filePath.split('/').last : "No file selected",
-                    style: TextStyle(color: filePath != null ? AppColors.textPrimary : AppColors.greyText),
-                  ),
-                ),
-              ),
-              ElevatedButton(
-                onPressed: isLoading ? null : onUpload,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.white,
-                  foregroundColor: Colors.black,
-                  elevation: 0,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                ),
-                child: Container(
-                  width: 92,
-                  height: 34,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: const Color(0xFFE7EAEC), width: 1),
-                  ),
-                  child: Center(
+        SizedBox(height: screenWidth * 0.02), // 2% of screen width
+        FractionallySizedBox(
+          widthFactor: 1.0, // Full width of parent
+          child: Container(
+            height: 56,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Padding(
+                    padding: EdgeInsets.all(screenWidth * 0.04), // 4% of screen width
                     child: Text(
-                      "Upload",
-                      style: GoogleFonts.inter(
-                        color: AppColors.blueText,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500,
+                      filePath != null ? filePath.split('/').last : "No file selected",
+                      style: TextStyle(
+                        color: filePath != null ? AppColors.textPrimary : AppColors.greyText,
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
                   ),
                 ),
-              ),
-            ],
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.02), // 2% of screen width
+                  child: ElevatedButton(
+                    onPressed: isLoading ? null : onUpload,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      foregroundColor: Colors.black,
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: screenWidth * 0.04, // 4% of screen width
+                        vertical: screenWidth * 0.03, // 3% of screen width
+                      ),
+                    ),
+                    child: Container(
+                      width: 92,
+                      height: 34,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(color: const Color(0xFFE7EAEC), width: 1),
+                      ),
+                      child: Center(
+                        child: Text(
+                          "Upload",
+                          style: GoogleFonts.inter(
+                            color: AppColors.blueText,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ],
@@ -129,115 +141,138 @@ class DocumentForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Get screen dimensions
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+
     return Form(
       key: formKey,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            width: 398,
-            height: 4,
-            padding: const EdgeInsets.symmetric(horizontal: 40),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                _buildSliderBar(step: 1),
-                const SizedBox(width: 10),
-                _buildSliderBar(step: 2),
-                const SizedBox(width: 10),
-                _buildSliderBar(step: 3),
-              ],
-            ),
-          ),
-          const SizedBox(height: 16),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Column(
+              // Responsive slider bar container
+              FractionallySizedBox(
+                widthFactor: 1.0,
+                child: Container(
+                  height: 4,
+                  padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.1), // 10% of screen width
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      _buildSliderBar(step: 1),
+                      SizedBox(width: screenWidth * 0.025), // 2.5% of screen width
+                      _buildSliderBar(step: 2),
+                      SizedBox(width: screenWidth * 0.025),
+                      _buildSliderBar(step: 3),
+                    ],
+                  ),
+                ),
+              ),
+              SizedBox(height: screenHeight * 0.02), // 2% of screen height
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    "Identity & Address proof of owner",
-                    style: GoogleFonts.inter(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
-                      color: AppColors.blueText,
+                  Flexible(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Identity & Address proof of owner",
+                          style: GoogleFonts.inter(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.blueText,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                        ),
+                        SizedBox(height: screenHeight * 0.01), // 1% of screen height
+                        RichText(
+                          text: TextSpan(
+                            style: GoogleFonts.inter(
+                              color: AppColors.greyText,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w400,
+                            ),
+                            children: [
+                              const TextSpan(text: "Raman Ji, get started with document upload!"),
+                            ],
+                          ),
+                          overflow: TextOverflow.visible,
+                        ),
+                      ],
                     ),
                   ),
-                  const SizedBox(height: 8),
-                  RichText(
-                    text: TextSpan(
+                  TextButton(
+                    onPressed: isLoading ? null : onSkipPressed,
+                    child: Text(
+                      "Skip",
                       style: GoogleFonts.inter(
                         color: AppColors.greyText,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
                       ),
-                      children: [
-                        const TextSpan(text: "Raman Ji, get started with document upload!"),
-                      ],
                     ),
                   ),
                 ],
               ),
-              TextButton(
-                onPressed: isLoading ? null : onSkipPressed,
-                child: Text(
-                  "Skip",
-                  style: GoogleFonts.inter(
-                    color: AppColors.greyText,
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
+              SizedBox(height: screenHeight * 0.04), // 4% of screen height
+              _buildDocumentField(
+                label: "PAN Card",
+                isRequired: true,
+                filePath: panCardPath,
+                onUpload: onPanCardUpload,
+                screenWidth: screenWidth,
               ),
+              SizedBox(height: screenHeight * 0.02), // 2% of screen height
+              _buildDocumentField(
+                label: "Aadhaar Card Front",
+                isRequired: true,
+                filePath: aadhaarFrontPath,
+                onUpload: onAadhaarFrontUpload,
+                screenWidth: screenWidth,
+              ),
+              SizedBox(height: screenHeight * 0.02), // 2% of screen height
+              _buildDocumentField(
+                label: "Aadhaar Card Back",
+                isRequired: true,
+                filePath: aadhaarBackPath,
+                onUpload: onAadhaarBackUpload,
+                screenWidth: screenWidth,
+              ),
+              SizedBox(height: screenHeight * 0.1), // Reduced from 0.4 to 10% for flexibility
+              Center(
+                child: isLoading
+                    ? CircularProgressIndicator(color: AppColors.primary)
+                    : FractionallySizedBox(
+                        widthFactor: 0.9, // 90% of available width
+                        child: ElevatedButton(
+                          onPressed: onSubmitPressed,
+                          style: ElevatedButton.styleFrom(
+                            minimumSize: const Size(398, 54),
+                            backgroundColor: AppColors.primary,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                          ),
+                          child: Text(
+                            "SUBMIT",
+                            style: GoogleFonts.inter(
+                              fontWeight: FontWeight.w700,
+                              fontSize: 16,
+                              color: AppColors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+              ),
+              SizedBox(height: MediaQuery.of(context).viewInsets.bottom),
             ],
-          ),
-          const SizedBox(height: 32),
-          _buildDocumentField(
-            label: "PAN Card",
-            isRequired: true,
-            filePath: panCardPath,
-            onUpload: onPanCardUpload,
-          ),
-          const SizedBox(height: 16),
-          _buildDocumentField(
-            label: "Aadhaar Card Front",
-            isRequired: true,
-            filePath: aadhaarFrontPath,
-            onUpload: onAadhaarFrontUpload,
-          ),
-          const SizedBox(height: 16),
-          _buildDocumentField(
-            label: "Aadhaar Card Back",
-            isRequired: true,
-            filePath: aadhaarBackPath,
-            onUpload: onAadhaarBackUpload,
-          ),
-          SizedBox(height: MediaQuery.of(context).size.height * 0.4),
-          Center(
-            child: isLoading
-                ? CircularProgressIndicator(color: AppColors.primary)
-                : ElevatedButton(
-                    onPressed: onSubmitPressed,
-                    style: ElevatedButton.styleFrom(
-                      minimumSize: const Size(398, 54),
-                      backgroundColor: AppColors.primary,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                    ),
-                    child: Text(
-                      "SUBMIT",
-                      style: GoogleFonts.inter(
-                        fontWeight: FontWeight.w700,
-                        fontSize: 16,
-                        color: AppColors.white,
-                      ),
-                    ),
-                  ),
-          ),
-          SizedBox(height: MediaQuery.of(context).viewInsets.bottom),
-        ],
+          );
+        },
       ),
     );
   }

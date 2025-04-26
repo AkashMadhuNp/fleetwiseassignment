@@ -1,6 +1,4 @@
-import 'package:fleetwise/BLoC/bloc/auth_bloc.dart';
 import 'package:fleetwise/components/custom_button.dart';
-import 'package:fleetwise/constant/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -52,12 +50,12 @@ class _LoginFormState extends State<LoginForm> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Padding(
-                padding: EdgeInsets.only(left: 16.0, bottom: 8.0),
+                padding: const EdgeInsets.only(left: 16.0, bottom: 8.0),
                 child: Text(
                   "Login or register",
                   style: GoogleFonts.inter(
                     fontSize: 14,
-                    color: AppColors.textSecondary,
+                    color: Theme.of(context).textTheme.bodyMedium?.color, // 0xFF596D7E (light), 0xFFB0B0B0 (dark)
                   ),
                 ),
               ),
@@ -65,11 +63,11 @@ class _LoginFormState extends State<LoginForm> {
                 width: double.infinity,
                 height: 58,
                 decoration: BoxDecoration(
-                  color: AppColors.white,
+                  color: Theme.of(context).colorScheme.surface, // 0xFFFFFFFF (light), 0xFF1E1E1E (dark)
                   borderRadius: BorderRadius.circular(18),
                   boxShadow: [
                     BoxShadow(
-                      color: AppColors.shadow,
+                      color: Theme.of(context).shadowColor, // 0x33000000 (light), 0x66000000 (dark)
                       blurRadius: 5,
                       offset: const Offset(0, 2),
                     ),
@@ -83,14 +81,14 @@ class _LoginFormState extends State<LoginForm> {
                         "+91",
                         style: GoogleFonts.inter(
                           fontSize: 18,
-                          color: AppColors.textSecondary,
+                          color: Theme.of(context).textTheme.bodyMedium?.color,
                         ),
                       ),
                     ),
                     Container(
                       width: 1,
                       height: 30,
-                      color: AppColors.divider,
+                      color: Theme.of(context).dividerColor, // 0xFFCFD8DC (light), 0xFF424242 (dark)
                       margin: const EdgeInsets.symmetric(horizontal: 10),
                     ),
                     Expanded(
@@ -104,14 +102,16 @@ class _LoginFormState extends State<LoginForm> {
                         ],
                         onChanged: widget.onPhoneChanged,
                         decoration: InputDecoration(
-                          contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                           border: InputBorder.none,
                           enabledBorder: InputBorder.none,
                           focusedBorder: InputBorder.none,
                           hintText: "Enter phone number",
-                          hintStyle: TextStyle(color: AppColors.textHint),
+                          hintStyle: Theme.of(context).inputDecorationTheme.hintStyle, // 0xFFB0BEC5 (light), 0xFF757575 (dark)
                           errorText: widget.phoneError,
+                          errorStyle: TextStyle(color: Theme.of(context).colorScheme.error), // 0xFFE57373 (light), 0xFFEF5350 (dark)
                         ),
+                        style: TextStyle(color: Theme.of(context).textTheme.bodyLarge?.color), // 0xFF596D7E (light), 0xFFE0E0E0 (dark)
                       ),
                     ),
                   ],
@@ -127,7 +127,7 @@ class _LoginFormState extends State<LoginForm> {
                       text: TextSpan(
                         style: GoogleFonts.inter(
                           fontSize: 14,
-                          color: AppColors.textSecondary,
+                          color: Theme.of(context).textTheme.bodyMedium?.color,
                         ),
                         children: [
                           const TextSpan(text: "by continuing, you agree to our "),
@@ -140,13 +140,13 @@ class _LoginFormState extends State<LoginForm> {
                       text: TextSpan(
                         style: GoogleFonts.inter(
                           fontSize: 14,
-                          color: AppColors.textSecondary,
+                          color: Theme.of(context).textTheme.bodyMedium?.color,
                         ),
                         children: [
                           TextSpan(
                             text: "Term Of Use",
                             style: GoogleFonts.inter(
-                              color: AppColors.textSecondary,
+                              color: Theme.of(context).colorScheme.primary, // 0xFF1A3A6D (light), 0xFF3F6BAF (dark)
                               fontWeight: FontWeight.bold,
                               decoration: TextDecoration.underline,
                             ),
@@ -159,7 +159,7 @@ class _LoginFormState extends State<LoginForm> {
                           TextSpan(
                             text: "Privacy Policy",
                             style: GoogleFonts.inter(
-                              color: AppColors.textSecondary,
+                              color: Theme.of(context).colorScheme.primary,
                               fontWeight: FontWeight.bold,
                               decoration: TextDecoration.underline,
                             ),
@@ -178,7 +178,7 @@ class _LoginFormState extends State<LoginForm> {
           ),
           const SizedBox(height: 40),
           widget.isLoading
-              ? Center(child: CircularProgressIndicator(color: AppColors.primary))
+              ? Center(child: CircularProgressIndicator(color: Theme.of(context).colorScheme.primary))
               : CustomButton(
                   text: "GET OTP",
                   onPressed: widget.onGetOtpPressed,

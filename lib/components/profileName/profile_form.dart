@@ -31,61 +31,86 @@ class _ProfileFormState extends State<ProfileForm> {
 
   @override
   Widget build(BuildContext context) {
+    // Get screen dimensions
+    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
+
     return Form(
       key: widget.formKey,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const ProfileHeader(),
-          const SizedBox(height: 90),
-          RichText(
-            text: TextSpan(
-              style: GoogleFonts.inter(
-                color: AppColors.textSecondary,
-                fontSize: 12,
-                fontWeight: FontWeight.w500,
-              ),
-              children: [
-                const TextSpan(text: "Your Full Name"),
-                TextSpan(
-                  text: "*",
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const ProfileHeader(),
+              // Use proportional spacing instead of fixed height
+              SizedBox(height: screenHeight * 0.05), // Reduced from 90 to 5% of screen height
+              RichText(
+                text: TextSpan(
                   style: GoogleFonts.inter(
-                    color: AppColors.error,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
+                    color: AppColors.textSecondary,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
+                  ),
+                  children: [
+                    const TextSpan(text: "Your Full Name"),
+                    TextSpan(
+                      text: "*",
+                      style: GoogleFonts.inter(
+                        color: AppColors.error,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: screenHeight * 0.015), 
+              FractionallySizedBox(
+                widthFactor: 1.0, 
+                child: TextFormField(
+                  controller: widget.nameController,
+                  validator: _validateName,
+                  enabled: !widget.isLoading,
+                  decoration: InputDecoration(
+                    fillColor: Colors.white,
+                    filled: true,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(16),
+                      borderSide: BorderSide.none,
+                    ),
+                    contentPadding: EdgeInsets.symmetric(
+                      horizontal: screenWidth * 0.04,
+                      vertical: screenHeight * 0.02, 
+                    ),
+                    hintText: "Enter your full name",
+                    hintStyle: TextStyle(color: AppColors.greyText),
                   ),
                 ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 10),
-          TextFormField(
-            controller: widget.nameController,
-            validator: _validateName,
-            enabled: !widget.isLoading,
-            decoration: InputDecoration(
-              fillColor: Colors.white,
-              filled: true,
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(16),
-                borderSide: BorderSide.none,
               ),
-              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-              hintText: "Enter your full name",
-              hintStyle: TextStyle(color: AppColors.greyText),
-            ),
-          ),
-          SizedBox(height: MediaQuery.of(context).size.height * 0.4),
-          Center(
-            child: widget.isLoading
-                ? CircularProgressIndicator(color: AppColors.primary)
-                : CustomButton(
-                    text: "SUBMIT",
-                    onPressed: widget.onSubmitPressed,
-                  ),
-          ),
-          SizedBox(height: MediaQuery.of(context).viewInsets.bottom),
-        ],
+              
+              SizedBox(
+                height: screenHeight * 0.1, 
+              ),
+              
+              Center(
+                child: widget.isLoading
+                    ? CircularProgressIndicator(color: AppColors.primary)
+                    : FractionallySizedBox(
+                        widthFactor: 0.9, 
+                        child: CustomButton(
+                          text: "SUBMIT",
+                          onPressed: widget.onSubmitPressed,
+                        ),
+                      ),
+              ),
+              
+              SizedBox(height: MediaQuery.of(context).viewInsets.bottom),
+            ],
+          );
+
+
+        },
       ),
     );
   }

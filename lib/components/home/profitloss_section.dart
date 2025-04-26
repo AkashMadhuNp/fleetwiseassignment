@@ -17,59 +17,64 @@ class ProfitLossSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double contentWidth = 398 * scaleFactor;
-    final double contentHeight = 69 * scaleFactor;
-    final double contentPadding = 16 * scaleFactor;
-    final double contentBorderRadius = 16 * scaleFactor;
-
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Column(
-          children: [
-            Text(
-              "Profit/Loss",
-              style: GoogleFonts.inter(
-                color: Colors.white,
-                fontSize: 16 * scaleFactor,
-              ),
+    final screenWidth = MediaQuery.of(context).size.width;
+    return Container(
+      width: screenWidth * 0.9, // Constrain width to 90% of screen
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Flexible(
+            fit: FlexFit.loose,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Profit/Loss",
+                  style: GoogleFonts.inter(
+                    color: Colors.white,
+                    fontSize: 16 * scaleFactor,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                ),
+                Text(
+                  date,
+                  style: GoogleFonts.inter(
+                    color: Colors.grey,
+                    fontSize: 12 * scaleFactor,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
             ),
-
-             Text(
-              date,
-              style: GoogleFonts.inter(
-                color: Colors.grey,
-                fontSize: 12 * scaleFactor,
-              ),
+          ),
+          Flexible(
+            fit: FlexFit.loose,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  profitLoss,
+                  style: GoogleFonts.inter(
+                    color: Colors.green,
+                    fontSize: 18 * scaleFactor,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                ),
+                Text(
+                  predicted.isEmpty ? "" : "predicted: $predicted",
+                  style: GoogleFonts.inter(
+                    color: Colors.grey,
+                    fontSize: 12 * scaleFactor,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
             ),
-
-
-
-          ],
-        ),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              profitLoss,
-              style: GoogleFonts.inter(
-                color: Colors.green,
-                fontSize: 18 * scaleFactor,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-           
-            Text(
-              predicted.isEmpty ? "" : "predicted: $predicted",
-              style: GoogleFonts.inter(
-                color: Colors.grey,
-                fontSize: 12 * scaleFactor,
-              ),
-            ),
-          ],
-        ),
-      ],
+          ),
+        ],
+      ),
     );
   }
 }

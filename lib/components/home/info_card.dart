@@ -4,8 +4,8 @@ import 'package:google_fonts/google_fonts.dart';
 
 class InfoCard extends StatelessWidget {
   final double scaleFactor;
-  final String imagePath; // Changed from IconData to String for asset path
-  final Color imageBackgroundColor; // Renamed from iconColor for clarity
+  final String imagePath;
+  final Color imageBackgroundColor;
   final String title;
   final String subtitle;
   final String? value;
@@ -14,8 +14,8 @@ class InfoCard extends StatelessWidget {
   const InfoCard({
     super.key,
     required this.scaleFactor,
-    required this.imagePath, // Updated parameter name
-    required this.imageBackgroundColor, // Updated parameter name
+    required this.imagePath,
+    required this.imageBackgroundColor,
     required this.title,
     required this.subtitle,
     this.value,
@@ -28,7 +28,7 @@ class InfoCard extends StatelessWidget {
     return Container(
       constraints: BoxConstraints(
         minHeight: 69 * scaleFactor,
-        maxWidth: screenWidth - (32 * scaleFactor), // accounting for padding
+        maxWidth: screenWidth - (32 * scaleFactor), // Account for padding
       ),
       child: Card(
         shape: RoundedRectangleBorder(
@@ -37,16 +37,17 @@ class InfoCard extends StatelessWidget {
         color: AppColors.background,
         margin: EdgeInsets.symmetric(vertical: 8 * scaleFactor),
         child: Padding(
-          padding: EdgeInsets.all(16 * scaleFactor),
+          padding: EdgeInsets.all(screenWidth * 0.04), // 4% of screen width
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Image.asset(
                 imagePath,
-                height: 38 * scaleFactor, // Set height to 38, scaled
-                width: 38 * scaleFactor, // Set width to 38, scaled
+                height: 38 * scaleFactor,
+                width: 38 * scaleFactor,
+                fit: BoxFit.contain,
               ),
-              SizedBox(width: 16 * scaleFactor),
+              SizedBox(width: screenWidth * 0.04), // 4% of screen width
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -59,6 +60,7 @@ class InfoCard extends StatelessWidget {
                         fontSize: 14 * scaleFactor,
                         fontWeight: FontWeight.w500,
                       ),
+                      overflow: TextOverflow.ellipsis,
                     ),
                     SizedBox(height: 4 * scaleFactor),
                     Text(
@@ -68,6 +70,7 @@ class InfoCard extends StatelessWidget {
                         fontWeight: FontWeight.w400,
                         fontSize: 12 * scaleFactor,
                       ),
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ],
                 ),
@@ -84,6 +87,7 @@ class InfoCard extends StatelessWidget {
                         fontSize: 16 * scaleFactor,
                         fontWeight: FontWeight.w500,
                       ),
+                      overflow: TextOverflow.ellipsis,
                     ),
                     if (predicted != null)
                       Text(
@@ -93,6 +97,7 @@ class InfoCard extends StatelessWidget {
                           fontWeight: FontWeight.w400,
                           fontSize: 12 * scaleFactor,
                         ),
+                        overflow: TextOverflow.ellipsis,
                       ),
                   ],
                 ),

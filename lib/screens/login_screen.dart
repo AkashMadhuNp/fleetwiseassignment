@@ -5,7 +5,6 @@ import 'package:fleetwise/components/login/logo_name.dart';
 import 'package:fleetwise/components/login/top_design.dart';
 import 'package:fleetwise/components/login/truck_img.dart';
 import 'package:fleetwise/components/login/login_form.dart';
-import 'package:fleetwise/constant/colors.dart';
 import 'package:fleetwise/screens/otp_screen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
@@ -49,8 +48,11 @@ class _LoginScreenState extends State<LoginScreen> {
         } else if (state is AuthError) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text(state.message, style: TextStyle(color: AppColors.white)),
-              backgroundColor: AppColors.error,
+              content: Text(
+                state.message,
+                style: TextStyle(color: Theme.of(context).colorScheme.onError),
+              ),
+              backgroundColor: Theme.of(context).colorScheme.error,
             ),
           );
         }
@@ -58,7 +60,7 @@ class _LoginScreenState extends State<LoginScreen> {
       builder: (context, state) {
         final isLoading = state is AuthLoading;
         return Scaffold(
-          backgroundColor: AppColors.background,
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor, // 0xFFE7EAEC (light), 0xFF121212 (dark)
           body: SafeArea(
             child: Stack(
               children: [
