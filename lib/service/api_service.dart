@@ -121,77 +121,73 @@ class ApiService {
 
   Future<PnLData> getTodayPnL({bool forceRefresh = false}) async {
     try {
-      // Check cache if not forcing refresh
       if (!forceRefresh && _pnlBox.containsKey('todayPnL')) {
         print("Loading Today's PnL from cache");
         return _pnlBox.get('todayPnL')!;
       }
 
-      // Fetch from API
       final response = await _dio.get("$baseUrl/getTodayPorterPnL");
       print("Today's PnL Raw Response: ${response.data}");
       final data = PnLData.fromJson(response.data['data']);
 
-      // Cache the data
       await _pnlBox.put('todayPnL', data);
       return data;
     } catch (e) {
       print("Error fetching Today's PnL: $e");
-      // Handle offline mode: return cached data if available
       if (_pnlBox.containsKey('todayPnL')) {
         print("Loading cached Today's PnL due to error");
         return _pnlBox.get('todayPnL')!;
       }
-      throw e; // Rethrow if no cached data
+      throw e; 
     }
   }
 
   Future<PnLData> getYesterdayPnL({bool forceRefresh = false}) async {
     try {
-      // Check cache if not forcing refresh
+      
       if (!forceRefresh && _pnlBox.containsKey('yesterdayPnL')) {
         print("Loading Yesterday's PnL from cache");
         return _pnlBox.get('yesterdayPnL')!;
       }
 
-      // Fetch from API
+      
       final response = await _dio.get("$baseUrl/getYesterdayPorterPnL");
       print("Yesterday's PnL Raw Response: ${response.data}");
       final data = PnLData.fromJson(response.data['data']);
 
-      // Cache the data
+     
       await _pnlBox.put('yesterdayPnL', data);
       return data;
     } catch (e) {
       print("Error fetching Yesterday's PnL: $e");
-      // Handle offline mode: return cached data if available
+      
       if (_pnlBox.containsKey('yesterdayPnL')) {
         print("Loading cached Yesterday's PnL due to error");
         return _pnlBox.get('yesterdayPnL')!;
       }
-      throw e; // Rethrow if no cached data
+      throw e; 
     }
   }
 
   Future<PnLData> getMonthlyPnL({bool forceRefresh = false}) async {
     try {
-      // Check cache if not forcing refresh
+      
       if (!forceRefresh && _pnlBox.containsKey('monthlyPnL')) {
         print("Loading Monthly PnL from cache");
         return _pnlBox.get('monthlyPnL')!;
       }
 
-      // Fetch from API
+      
       final response = await _dio.get("$baseUrl/getMonthlyPorterPnL");
       print("Monthly PnL Raw Response: ${response.data}");
       final data = PnLData.fromJson(response.data['data']);
 
-      // Cache the data
+      
       await _pnlBox.put('monthlyPnL', data);
       return data;
     } catch (e) {
       print("Error fetching Monthly PnL: $e");
-      // Handle offline mode: return cached data if available
+      
       if (_pnlBox.containsKey('monthlyPnL')) {
         print("Loading cached Monthly PnL due to error");
         return _pnlBox.get('monthlyPnL')!;

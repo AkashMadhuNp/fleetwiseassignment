@@ -2,6 +2,7 @@ import 'package:fleetwise/BLoC/bloc/auth_bloc.dart';
 import 'package:fleetwise/constant/colors.dart';
 import 'package:fleetwise/models/pnl_model.dart';
 import 'package:fleetwise/screens/login_screen.dart';
+import 'package:fleetwise/screens/sample_screen.dart';
 import 'package:fleetwise/service/api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

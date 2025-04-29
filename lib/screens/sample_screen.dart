@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+class SampleScreen extends StatelessWidget {
+  const SampleScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
