@@ -1,7 +1,9 @@
+import 'package:fleetwise/constant/colors.dart';
 import 'package:fleetwise/screens/home_paage.dart';
 import 'package:fleetwise/screens/loss_profit_details.dart';
+import 'package:fleetwise/service/api_service.dart';
 import 'package:flutter/material.dart';
-import '../constant/colors.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -13,7 +15,6 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
 
-  // Define pages for the BottomNavigationBar
   static const List<Widget> _tabPages = <Widget>[
     HomeTab(),
     VehiclesPage(),
@@ -29,39 +30,52 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: _tabPages[_selectedIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
+    return FutureBuilder<bool>(
+      future: Provider.of<ApiService>(context, listen: false).isAuthenticated(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        if (!snapshot.hasData || !snapshot.data!) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            Navigator.pushReplacementNamed(context, '/login');
+          });
+          return const SizedBox();
+        }
+        return Scaffold(
+          body: _tabPages[_selectedIndex],
+          bottomNavigationBar: BottomNavigationBar(
+            items: const <BottomNavigationBarItem>[
+              BottomNavigationBarItem(
+                icon: Icon(Icons.home),
+                label: 'Home',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.directions_car),
+                label: 'Vehicles',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.person),
+                label: 'Drivers',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.account_circle),
+                label: 'Account',
+              ),
+            ],
+            currentIndex: _selectedIndex,
+            selectedItemColor: AppColors.primary,
+            unselectedItemColor: AppColors.greyText,
+            backgroundColor: AppColors.white,
+            type: BottomNavigationBarType.fixed,
+            onTap: _onItemTapped,
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.directions_car),
-            label: 'Vehicles',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Drivers',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.account_circle),
-            label: 'Account',
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        selectedItemColor: AppColors.primary,
-        unselectedItemColor: AppColors.greyText,
-        backgroundColor: AppColors.white,
-        type: BottomNavigationBarType.fixed,
-        onTap: _onItemTapped,
-      ),
+        );
+      },
     );
   }
 }
 
-// Custom widget for the Home tab with PageView
 class HomeTab extends StatefulWidget {
   const HomeTab({super.key});
 
@@ -89,7 +103,7 @@ class _HomeTabState extends State<HomeTab> {
     return Scaffold(
       body: PageView(
         controller: _pageController,
-        physics: const AlwaysScrollableScrollPhysics(), // Ensure two-way scrolling
+        physics: const AlwaysScrollableScrollPhysics(),
         children: const [
           HomePage(),
           LossProfitDetails(),
@@ -99,7 +113,6 @@ class _HomeTabState extends State<HomeTab> {
   }
 }
 
-// Placeholder pages remain unchanged
 class VehiclesPage extends StatelessWidget {
   const VehiclesPage({super.key});
 

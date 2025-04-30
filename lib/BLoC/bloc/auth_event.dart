@@ -62,3 +62,7 @@ class FetchPnLEvent extends AuthEvent {
   @override
   List<Object?> get props => [period];
 }
+
+class CheckAuthStatus extends AuthEvent {
+  const CheckAuthStatus();
+}

@@ -9,9 +9,13 @@ abstract class AuthState extends Equatable {
   List<Object?> get props => [];
 }
 
-class AuthInitial extends AuthState {}
+class AuthInitial extends AuthState {
+  const AuthInitial();
+}
 
-class AuthLoading extends AuthState {}
+class AuthLoading extends AuthState {
+  const AuthLoading();
+}
 
 class OtpSent extends AuthState {
   final String requestId;
@@ -51,4 +55,8 @@ class AuthError extends AuthState {
 
   @override
   List<Object?> get props => [message];
+}
+
+class Unauthenticated extends AuthState {
+  const Unauthenticated();
 }

@@ -4,6 +4,7 @@ class AuthResponse {
   final String tokenType;
   final bool exists;
   final String uuid;
+  final String? name; // Add name field (nullable if it’s optional)
 
   AuthResponse({
     required this.accessToken,
@@ -11,6 +12,7 @@ class AuthResponse {
     required this.tokenType,
     required this.exists,
     required this.uuid,
+    this.name, // Optional name field
   });
 
   factory AuthResponse.fromJson(Map<String, dynamic> json) {
@@ -20,6 +22,7 @@ class AuthResponse {
       tokenType: json['token_type'] ?? '',
       exists: json['exists'] ?? false,
       uuid: json['uuid'] ?? '',
+      name: json['name'], // Include name in fromJson
     );
   }
 }

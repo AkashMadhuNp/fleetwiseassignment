@@ -7,17 +7,18 @@ import 'auth_state.dart';
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final ApiService apiService;
 
-  AuthBloc(this.apiService) : super(AuthInitial()) {
+  AuthBloc(this.apiService) : super(const AuthInitial()) {
     on<SendOtpEvent>(_onSendOtp);
     on<VerifyOtpEvent>(_onVerifyOtp);
     on<UpdateNameEvent>(_onUpdateName);
     on<UploadDocumentEvent>(_onUploadDocument);
+    on<CheckAuthStatus>(_onCheckAuthStatus);
     // on<AddVehicleEvent>(_onAddVehicle);
     // on<FetchPnLEvent>(_onFetchPnL);
   }
 
   Future<void> _onSendOtp(SendOtpEvent event, Emitter<AuthState> emit) async {
-    emit(AuthLoading());
+    emit(const AuthLoading());
     try {
       final requestId = await apiService.sendOtp(event.phoneNumber);
       emit(OtpSent(requestId, event.phoneNumber));
@@ -27,7 +28,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   }
 
   Future<void> _onVerifyOtp(VerifyOtpEvent event, Emitter<AuthState> emit) async {
-    emit(AuthLoading());
+    emit(const AuthLoading());
     try {
       final authResponse = await apiService.verifyOtp(
         phoneNumber: event.phoneNumber,
@@ -41,10 +42,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   }
 
   Future<void> _onUpdateName(UpdateNameEvent event, Emitter<AuthState> emit) async {
-    emit(AuthLoading());
+    emit(const AuthLoading());
     try {
       final updatedName = await apiService.updateName(event.name);
-      print("Emitting AuthSuccess with name: $updatedName");
       emit(AuthSuccess(name: updatedName));
     } catch (e) {
       emit(AuthError(_parseError(e)));
@@ -52,44 +52,30 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   }
 
   Future<void> _onUploadDocument(UploadDocumentEvent event, Emitter<AuthState> emit) async {
-    emit(AuthLoading());
+    emit(const AuthLoading());
     try {
       await apiService.uploadFile('pan_card', event.panCardPath);
       await apiService.uploadFile('aadhar_card', event.aadhaarFrontPath);
       await apiService.uploadFile('aadhar_card_back', event.aadhaarBackPath);
-      emit(AuthSuccess(documentsUploaded: true));
+      emit(const AuthSuccess(documentsUploaded: true));
     } catch (e) {
       emit(AuthError(_parseError(e)));
     }
   }
 
-  // Future<void> _onAddVehicle(AddVehicleEvent event, Emitter<AuthState> emit) async {
-  //   emit(AuthLoading());
-  //   try {
-  //     await apiService.addVehicle(event.vehicleNumber);
-  //     final data = await apiService.getTodayPnL(); // Refresh P&L data with vehicles
-  //     emit(AuthSuccess(vehicleAdded: true, pnLData: data));
-  //   } catch (e) {
-  //     emit(AuthError(_parseError(e)));
-  //   }
-  // }
-
-  // Future<void> _onFetchPnL(FetchPnLEvent event, Emitter<AuthState> emit) async {
-  //   emit(AuthLoading());
-  //   try {
-  //     late PnLData data;
-  //     if (event.period == "today") {
-  //       data = await apiService.getTodayPnL();
-  //     } else if (event.period == "yesterday") {
-  //       data = await apiService.getYesterdayPnL();
-  //     } else {
-  //       data = await apiService.getMonthlyPnL();
-  //     }
-  //     emit(AuthSuccess(pnLData: data));
-  //   } catch (e) {
-  //     emit(AuthError(_parseError(e)));
-  //   }
-  // }
+  Future<void> _onCheckAuthStatus(CheckAuthStatus event, Emitter<AuthState> emit) async {
+    emit(const AuthLoading());
+    try {
+      final isAuthenticated = await apiService.isAuthenticated();
+      if (isAuthenticated) {
+        emit(const AuthSuccess()); // No specific data needed for initial check
+      } else {
+        emit(const Unauthenticated());
+      }
+    } catch (e) {
+      emit(const Unauthenticated());
+    }
+  }
 
   String _parseError(dynamic e) {
     if (e is DioException) {
